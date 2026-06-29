@@ -8,3 +8,6 @@ cmds = ["cd server && pnpm build"]
 
 [start]
 cmd = "cd server && node dist/main.js"
+
+[variables]
+PATH = "/app/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
