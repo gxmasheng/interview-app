@@ -5,22 +5,20 @@ WORKDIR /app
 # 安装pnpm
 RUN npm install -g pnpm
 
-# 复制根目录package.json和pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
-
-# 复制server目录
+# 复制package文件
+COPY package.json pnpm-lock.yaml ./
 COPY server/package.json ./server/
-COPY server/dist ./server/dist/
-COPY server/node_modules ./server/node_modules/
 
-# 安装生产依赖
-RUN cd server && pnpm install --prod --frozen-lockfile
+# 在Docker中安装依赖
+RUN pnpm install --prod --frozen-lockfile
+
+# 复制构建产物
+COPY server/dist ./server/dist/
 
 # 设置环境变量
 ENV NODE_ENV=production
-ENV PORT=3000
 
-# 暴露端口
+# 暴露端口（Railway会设置PORT环境变量）
 EXPOSE 3000
 
 # 启动服务
