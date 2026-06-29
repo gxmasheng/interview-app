@@ -30,6 +30,19 @@ async function bootstrap() {
     origin: true,
     credentials: true,
   });
+
+  // 在设置全局前缀之前，添加根路由处理器
+  app.use('/', (req, res, next) => {
+    if (req.path === '/') {
+      return res.json({
+        status: 'success',
+        message: 'Interview App API is running',
+        version: '1.0.0'
+      });
+    }
+    next();
+  });
+
   app.setGlobalPrefix('api');
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -46,12 +59,12 @@ async function bootstrap() {
     console.log(`Server running on http://localhost:${port}`);
   } catch (err) {
     if (err.code === 'EADDRINUSE') {
-      console.error(`❌ 端口 \({port} 被占用! 请运行 'npx kill-port \){port}' 然后重试。`);
+      console.error(`❌ 端口 ${port} 被占用! 请运行 'npx kill-port ${port}' 然后重试。`);
       process.exit(1);
     } else {
       throw err;
     }
   }
-  console.log(`Application is running on: http://localhost:3000`);
 }
 bootstrap();
+
